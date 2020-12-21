@@ -8,19 +8,31 @@
           <div class="thumbnail">
             <img
               class="card-img-top"
-              src="<%= cluck.image_url %>"
+              src="/images/avatar.jpg"
               alt="image_url"
             />
           </div>
-        </div>        <h5 class="card-title"><%= cluckername %></h5>
+        </div>
+        <h5 class="card-title-top"><%= cluckername %></h5>
 
         <p class="card-text"><%=cluck.content%></p>
-        <a value="View" class="btn btn-primary" href="/view/<%=cluck.id%>"
-          >View Cluck</a>
+        <% if (cluck.image_url) {%>
+
+        <img
+          class="card-img-top"
+          src="<%=cluck.image_url%>"
+          alt="Card image cap"
+        />
+        <%} else {%>
+        <img
+          class="card-img-top"
+          src="/images/image_unavailable.jpeg"
+          alt="Card image cap"
+        />
+
+        <%}%>
       </div>
     </div>
   </form>
 </div>
-<% } %> 
-<%- include('./partials/footer') %>
-
+<% } %> <%- include('./partials/footer') %>
