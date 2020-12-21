@@ -1,19 +1,20 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
   <nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href='/clucks'>
       <img src="/images/logo.png" width="100" height="100" class="d-inline-block align-top" alt="">
-      </a><% if (cluckername) { %>
-  <span class='navbar-text text-dark'>
+      </a>
+      <% if (cluckername) { %>
+ <form action='/sign_out' method="POST" class='form-inline'>     <button type='submit' class='btn btn-outline-dark px-5'>Sign Out</button></form>     <span class='px-5 navbar-text text-dark'>
     signed in as  <%= cluckername %>
-  </span>   <form action='/sign_out' method="POST" class='form-inline'>     <button type='submit' class='btn btn-outline-dark'>Sign Out</button></form>   
+  </span>  
 
-<% } else { %><a class='btn btn-outline-dark' href='/sign_in'>Sign In</a><% } %>
+<% } else { %><a class='btn px-5 btn-outline-dark' href='/sign_in'>Sign In</a><% } %>
   </nav>
-  <a class='btn btn-outline-dark' href='/new'>Cluck</a>
+  <a class='btn btn-outline-dark px-5' href='/new'>Cluck</a>
 </button>
 
 
     </ul>
+    
   </div>
 </nav>
-
