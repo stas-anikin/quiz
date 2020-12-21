@@ -7,12 +7,13 @@
     signed in as  <%= cluckername %>
   </span>   <form action='/sign_out' method="POST" class='form-inline'>     <button type='submit' class='btn btn-outline-dark'>Sign Out</button></form>   
 
-<% } else { %><button type='submit' class='btn btn-outline-dark' href='/sign_in'>Sign In</button><% } %>
+<% } else { %><a class='btn btn-outline-dark' href='/sign_in'>Sign In</a><% } %>
   </nav>
-  <button type='submit' class='btn btn-outline-dark' href='/new_cluck'>Cluck</button>
+  <a class='btn btn-outline-dark' href='/new'>Cluck</a>
 </button>
 
-      
+
     </ul>
   </div>
 </nav>
+

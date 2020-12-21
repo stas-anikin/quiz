@@ -46,10 +46,15 @@ app.post('/sign_out', (request, response)=>{
   response.clearCookie('cluckername')
   response.redirect('/sign_in')
 })
-
+app.get("/clucks", (request, response) => {
+  knex("clucks")
+    .orderBy("created_at", "desc")
+    .then((clucks) => {
+      response.render("clucks", { clucks: clucks });
+    });
+});
 //router setup
-const clucksRouter = require('./routes/clucks');
-app.use("/clucks", clucksRouter);
+
 const rootRouter = require('./routes/root');
 app.use("/", rootRouter);
 

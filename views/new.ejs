@@ -1,0 +1,33 @@
+<%- include('./partials/header')%>
+  <h1>New Post</h1>
+  <form action='/new' method='POST'>
+   
+<div class='card mb-4'>
+  <div class='card-body'> <div class='form-group'>
+    <h5 class='card-title'>Content</h5>
+ 
+    <input
+        type='text'
+        class='form-control'
+        name='content'
+        placeholder="Whatchoo cluckin' 'bout?'"
+      >
+    </div>
+    <h5 class='card-title'>Image Url</h5>
+
+    <div class='form-group'>
+      <input
+        type='url'
+        class='form-control'
+        name='image_url'
+        placeholder='e.g. http://imgur.com/some_random_pic.gifv'
+      >
+    </div> 
+    <% if (cluckername) {%>
+ <input type='submit' value='Cluck!' class='btn btn-outline-success'><%} else { %> <a class='btn btn-outline-dark' href='/sign_in'>You must be signed in to Cluck</a>
+
+<%}%>
+  </form>  </div>
+</div>
+<%- include('./partials/footer') %>
+

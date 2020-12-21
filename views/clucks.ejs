@@ -1,0 +1,26 @@
+<%- include('./partials/header') %>
+<div class="card-deck">
+  <% for (let cluck of clucks) { %>
+  <form action="/<%= cluck.id %>" method="POST">
+    <div class="card mb-4" style="width: 18rem">
+      <div class="card-body">
+        <div class="col-sm-6 col-md-3">
+          <div class="thumbnail">
+            <img
+              class="card-img-top"
+              src="<%= cluck.image_url %>"
+              alt="image_url"
+            />
+          </div>
+        </div>        <h5 class="card-title"><%= cluckername %></h5>
+
+        <p class="card-text"><%=cluck.content%></p>
+        <a value="View" class="btn btn-primary" href="/view/<%=cluck.id%>"
+          >View Cluck</a>
+      </div>
+    </div>
+  </form>
+</div>
+<% } %> 
+<%- include('./partials/footer') %>
+

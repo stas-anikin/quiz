@@ -19,7 +19,13 @@ router.use(logger('dev')); // add logging middleware
 
 router.use(cookieParser()); //this will parse cookies and put them on request.cookies
 
+router.get('/new', (request, response) => {
+    response.render('new', { cluck: false });
+  });
 
+  router.get('/new', (request, response) => {
+    response.render('new', { cluck: false });
+  });
 
 
 
