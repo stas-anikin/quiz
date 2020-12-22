@@ -1,75 +1,60 @@
 const express = require("express");
-const knex = require("../db/client");const path = require("path");
+const knex = require("../db/client");
 const router = express.Router();
-const cookieParser = require("cookie-parser");
-const methodOverride = require("method-override");
-const logger = require("morgan");
-const { response } = require("express");
-router.use(cookieParser());
+const moment=require('moment')
 
-
-router.use((request, response, next)=>{
-  console.log('cookies:', request.cookies)
+let date = new Date();
+let current_hour = date.getHours();
+let current_minute=date.getMinutes();
+// Getting cluckername from cookies into a constant to be used
+router.use((request, response, next) => {
+  console.log("cookies:", request.cookies);
   const cluckername = request.cookies.cluckername;
-  response.locals.cluckername='';
-// properties set on res.locals become accessible in any view
-  if (cluckername){
-    response.locals.cluckername=cluckername;
-    console.log(`signed in as ${cluckername}`)
+  response.locals.cluckername = "";
+  if (cluckername) {
+    response.locals.cluckername = cluckername;
+    console.log(`signed in as ${cluckername}`);
   }
-  // next is a function, when invoked it will tell express to move on to the next middleware
   next();
-})
-
-
-
-
-
-
-
-
-// add the request handlers for "sign_in" and "/" maybe "/welcome" if you have it
-
-
-const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
-
-router.post("/sign_in", (request, response) => {
-  const username = request.body.username;
-  response.cookie("username", username, {
-    maxAge: ONE_WEEK,
-  });
-  response.redirect("/");
 });
 
+//HOME PAGE - redirects to index of clucks
 router.get("/", (request, response) => {
   response.redirect("clucks");
 });
-router.get("/clucks", (request, response) => {
-  response.render("clucks");
-});
-router.get("/welcome", (request, response) => {
-  response.render("welcome");
-});
+//SIGN IN PAGE
 router.get("/sign_in", (request, response) => {
   response.render("sign_in");
 });
-
+//NEW CLUCK
 router.get("/new", (request, response) => {
   response.render("new", { cluck: false });
 });
 
-// Index need an index page created to work
+//INDEX
 router.get("/clucks", (request, response) => {
+
+
   knex("clucks")
     .orderBy("created_at", "desc")
     .then((clucks) => {
-      response.render("clucks", { clucks: clucks });
+      response.render("clucks", { clucks: clucks, moment: moment });
     });
 });
+const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
 
-
-
-
+// SIGN IN
+router.post("/sign_in", (request, response) => {
+  const COOKIE_EXPIRE = 1000 * 60 * 60 * 24 * 7;
+  const cluckername = request.body.cluckername;
+  response.cookie("cluckername", cluckername, { maxAge: COOKIE_EXPIRE });
+  response.redirect("/new");
+});
+// SIGN OUT
+router.post("/sign_out", (request, response) => {
+  response.clearCookie("cluckername");
+  response.redirect("/sign_in");
+});
 
 // CREATE NEW
 router.post("/new", (request, response) => {
@@ -77,13 +62,17 @@ router.post("/new", (request, response) => {
     .insert({
       content: request.body.content,
       image_url: request.body.image_url,
-      username: request.cookies.cluckername
+      username: request.cookies.cluckername,
     })
     .returning("*")
     .then((clucks) => {
       const cluck = clucks[0];
       response.redirect("clucks");
-      // response.redirect(`view/${cluck.id}`);
     });
 });
+
+
+
+
+
 module.exports = router;
