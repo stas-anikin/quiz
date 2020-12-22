@@ -1,11 +1,11 @@
 const express = require("express");
 const knex = require("../db/client");
 const router = express.Router();
-const moment=require('moment')
+const moment = require("moment");
 
 let date = new Date();
 let current_hour = date.getHours();
-let current_minute=date.getMinutes();
+let current_minute = date.getMinutes();
 // Getting cluckername from cookies into a constant to be used
 router.use((request, response, next) => {
   console.log("cookies:", request.cookies);
@@ -31,17 +31,48 @@ router.get("/new", (request, response) => {
   response.render("new", { cluck: false });
 });
 
-//INDEX
-router.get("/clucks", (request, response) => {
-
-
-  knex("clucks")
-    .orderBy("created_at", "desc")
-    .then((clucks) => {
-      response.render("clucks", { clucks: clucks, moment: moment });
+router.get("/schools", function (req, res) {
+  var schools;
+  knex("schools")
+    .select()
+    .then(function (ret) {
+      schools = ret;
+      return knex("students").select();
+    })
+    .then(function (students) {
+      res.render("schools", {
+        students: students,
+        schools: schools,
+      });
     });
 });
-const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
+
+//INDEX this is working code, below is experimental
+router.get("/clucks", (request, response) => {
+  let clucks;
+  knex("clucks")
+    .orderBy("created_at", "desc")
+    .then((ret) => {
+      clucks = ret;
+      return knex("hashtags").select("*");
+    })
+    .then(function (hashtags) {
+      response.render("clucks", {
+        clucks: clucks,
+        moment: moment,
+        hashtags: hashtags,
+      });
+    });
+});
+
+// //INDEX this is working code, below is experimental
+// router.get("/clucks", (request, response) => {
+//   knex("clucks")
+//     .orderBy("created_at", "desc")
+//     .then((clucks) => {
+//       response.render("clucks", { clucks: clucks, moment: moment });
+//     });
+// });
 
 // SIGN IN
 router.post("/sign_in", (request, response) => {
@@ -56,23 +87,51 @@ router.post("/sign_out", (request, response) => {
   response.redirect("/sign_in");
 });
 
-// CREATE NEW
+//this function will check for hashtags once a new cluck is created
+const trending = (response, hashtags) => {
+  if (hashtags.length === 0) {
+    response.redirect("/");
+  } else {
+    let trend = hashtags.pop();
+    knex
+      .select()
+      .from("hashtags")
+      .where("hashtag", trend)
+      .then((check) => {
+        if (check.length === 0) {
+          knex
+            .insert({ hashtag: trend, count: 1 })
+            .into("hashtags")
+            .then(() => {
+              trending(response, hashtags);
+            });
+        } else {
+          knex("hashtags")
+            .where("hashtag", trend)
+            .increment("count", 1)
+            .then(() => {
+              trending(response, hashtags);
+            });
+        }
+      });
+  }
+};
 router.post("/new", (request, response) => {
-  knex("clucks")
+  let content = request.body.content;
+  let image_url = request.body.image_url;
+  let username = request.cookies.cluckername;
+  let hashtags = content.split(" ").filter((word) => word[0] === "#");
+
+  knex
     .insert({
-      content: request.body.content,
-      image_url: request.body.image_url,
-      username: request.cookies.cluckername,
+      username,
+      content,
+      image_url,
     })
-    .returning("*")
-    .then((clucks) => {
-      const cluck = clucks[0];
-      response.redirect("clucks");
+    .into("clucks")
+    .then(() => {
+      trending(response, hashtags);
     });
 });
-// 
-
-
-
 
 module.exports = router;
