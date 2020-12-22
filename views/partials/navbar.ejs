@@ -1,0 +1,20 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href='/clucks'>
+      <img src="/images/logo.png" width="100" height="100" class="d-inline-block align-top" alt="">
+      </a>
+      <% if (cluckername) { %>
+ <form action='/sign_out' method="POST" class='form-inline'>     <button type='submit' class='btn btn-outline-dark px-5'>Sign Out</button></form>     <span class='px-5  navbar-text text-dark h3'>
+    <%= cluckername %>
+  </span>  
+
+<% } else { %><a class='btn btn-outline-dark px-5' href='/sign_in'>Sign In</a><% } %>
+  </nav>
+  <a class='btn btn-outline-dark px-5' href='/new'>Cluck</a>
+</button>
+
+
+    </ul>
+    
+  </div>
+</nav>

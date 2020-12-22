@@ -1,0 +1,59 @@
+<%- include('./partials/header') %>  <div class="col-xs-7 col-sm-6 col-lg-8">
+   <div class='container'>      <div class="card mb-4 mx-auto d-none d-lg-block d-xl-none
+    ">
+    <div class="card-body">
+      <div class="card-title-top">Trending Hashtags</div>
+      <% for (let hashtag of hashtags) { %>
+      <p><%=hashtag.hashtag%> ● <%=hashtag.count%></p>
+      <%}%>
+    </div>
+  </div>  </div>
+</div>
+<main class="container">
+
+  <div class="row justify-content-center">
+    <% for (let cluck of clucks) { %>
+    <form action="/<%= cluck.id %>" method="POST">
+      <div class="card mb-4 mx-auto">
+        <div class="card-body">
+          <div class="col-sm-6 mx-auto col-md-3">
+            <div class="thumbnail">
+              <img
+                class="card-img-top"
+                src="/images/avatar.jpg"
+                alt="image_url"
+              />
+            </div>
+          </div>
+          <% if (moment(cluck.created_at).fromNow()==='a few seconds ago'){%>
+          <h5 class="card-title-top"><%= cluckername %> ● just now</h5>
+          <%} else {%>
+          <h5 class="card-title-top">
+            <%= cluckername %> ● <%=moment(cluck.created_at).fromNow()%>
+          </h5>
+          <%}%>
+          <p class="card-text"><%=cluck.content%></p>
+          <% if (cluck.image_url) {%>
+          <div class="col-sm-6 mx-auto col-md-3">
+            <img
+              class="card-img-top"
+              src="<%=cluck.image_url%>"
+              alt="Card image cap"
+            />
+          </div>
+          <%} else {%>
+          <div class="col-sm-6 mx-auto col-md-3">
+            <img
+              class="card-img-top"
+              src="/images/image_unavailable.jpeg"
+              alt="Card image cap"
+            /><%}%>
+          </div>
+        </div>
+      </div>
+    </form>
+    <% } %>
+  </div>
+
+  <%- include('./partials/footer') %>
+</main>
